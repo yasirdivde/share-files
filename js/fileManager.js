@@ -1,4 +1,4 @@
-export const MAX_SIZE_BYTES = 100 * 1024 * 1024; // 100 MB
+export const MAX_SIZE_BYTES = 200 * 1024 * 1024; // 200 MB
 let selectedFiles = [];
 
 export function addFiles(newFiles) {
@@ -10,7 +10,7 @@ export function addFiles(newFiles) {
         const isDuplicate = selectedFiles.some(f => f.name === file.name && f.size === file.size);
         if (isDuplicate) continue;
         if (currentTotalSize + sizeToAdd + file.size > MAX_SIZE_BYTES) {
-            alert('Cannot add files. 100MB limit exceeded.');
+            alert('Cannot add files. 200MB limit exceeded.');
             break;
         }
         sizeToAdd += file.size;
@@ -34,9 +34,11 @@ export function clearAllFiles() {
 }
 
 export function formatBytes(bytes) {
-    if (bytes === 0) return '0 MB';
-    const mb = bytes / (1024 * 1024);
-    return mb.toFixed(2) + ' MB';
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
 export async function getTransferableData() {
