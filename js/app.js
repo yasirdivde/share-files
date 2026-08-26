@@ -210,30 +210,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // Let the browser natively handle array chunk stitching
                     const blob = new Blob(receiveBuffer, { type: 'application/octet-stream' });
-                    console.log(blob);
-
-console.log("Blob size:", blob.size);
-
-blob.arrayBuffer().then(buffer => {
-    console.log("Blob arrayBuffer length:", buffer.byteLength);
-});
                     
-
                     pendingDownloadBlobUrl = URL.createObjectURL(blob);
-
-console.log("Blob URL:", pendingDownloadBlobUrl);
-
-fetch(pendingDownloadBlobUrl)
-  .then(r => {
-    console.log("Fetch status:", r.status);
-    return r.arrayBuffer();
-  })
-  .then(buf => {
-    console.log("Fetched blob bytes:", buf.byteLength);
-  })
-  .catch(err => {
-    console.error("Blob URL fetch failed:", err);
-  }); 
                     pendingDownloadFilename = expectedName;
                     
                     renderCompleteScreen('receiver', expectedName, expectedSize, true);
@@ -261,14 +239,14 @@ fetch(pendingDownloadBlobUrl)
     btnDownloadFile.addEventListener('click', () => {
         if(!pendingDownloadBlobUrl) return;
         const a = document.createElement('a');
-a.href = pendingDownloadBlobUrl;
-a.download = pendingDownloadFilename;
-document.body.appendChild(a);
+        a.href = pendingDownloadBlobUrl;
+        a.download = pendingDownloadFilename;
+        document.body.appendChild(a);
 
-setTimeout(() => {
-    a.click();
-    document.body.removeChild(a);
-}, 100);
+        setTimeout(() => {
+            a.click();
+            document.body.removeChild(a);
+        }, 100);
     });
 
     // ----- QR SCANNER LOGIC -----
