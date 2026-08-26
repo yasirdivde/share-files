@@ -68,7 +68,8 @@ export function resetSenderUI() {
     const fileInput = document.getElementById('file-input');
     
     if (listContainer) listContainer.innerHTML = '';
-    if (sizeIndicator) sizeIndicator.innerHTML = `0 / ${MAX_SIZE_BYTES / (1024 * 1024)} MB`;
+    // Updated to show 0 B instead of 0
+    if (sizeIndicator) sizeIndicator.innerHTML = `0 B / ${MAX_SIZE_BYTES / (1024 * 1024)} MB`;
     if (startButton) startButton.setAttribute('disabled', 'true');
     if (fileInput) fileInput.value = '';
 }
@@ -107,9 +108,13 @@ export function renderFileList(files, onRemoveCallback) {
         listContainer.appendChild(fileItem);
     });
     listContainer.querySelectorAll('button[data-index]').forEach(btn => btn.addEventListener('click', (e) => onRemoveCallback(parseInt(e.currentTarget.getAttribute('data-index')))));
+    
     const totalSize = getTotalSize();
     const maxSizeMB = MAX_SIZE_BYTES / (1024 * 1024);
-    sizeIndicator.innerHTML = `${(totalSize / (1024 * 1024)).toFixed(0)} / ${maxSizeMB} MB`;
+    
+    // Updated to use formatBytes correctly
+    sizeIndicator.innerHTML = `${formatBytes(totalSize)} / ${maxSizeMB} MB`;
+    
     if (files.length > 0) startButton.removeAttribute('disabled');
     else startButton.setAttribute('disabled', 'true');
 }
