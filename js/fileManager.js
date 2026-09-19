@@ -48,5 +48,5 @@ export async function getTransferableData() {
     const zip = new JSZip();
     selectedFiles.forEach(file => zip.file(file.name, file));
     const content = await zip.generateAsync({ type: "blob" });
-    return new File([content], "Sharely_Transfer.zip", { type: "application/zip" });
+    return new File([content], "ShareFiles_Transfer.zip", { type: "application/zip" });
 }

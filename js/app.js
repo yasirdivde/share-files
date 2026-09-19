@@ -31,7 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let transferStartTime = 0;
     let html5QrcodeScanner = null;
     let isTransferring = false;
-    let receiveBuffer = [];
+    // FIX: single preallocated Uint8Array instead of array-of-chunks
+    let receiveBuffer = null;
     let pendingDownloadBlobUrl = null;
     let pendingDownloadFilename = null;
 
@@ -44,7 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
             URL.revokeObjectURL(pendingDownloadBlobUrl); 
             pendingDownloadBlobUrl = null;
         }
-        receiveBuffer = []; 
+        // FIX: release buffer reference so GC can reclaim it
+        receiveBuffer = null; 
         preparedFile = null;
         currentInputCode = null;
 
@@ -165,16 +167,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 btnConnectReceiver.innerHTML = originalText; btnConnectReceiver.removeAttribute('disabled');
             }, 
             (error) => { 
-                btnConnectReceiver.innerHTML = originalText; btnConnectReceiver.removeAttribute('disabled');
-                showToast('Connection Failed after multiple attempts. Check code.');
+                // FIX: clearer failure feedback so the user knows the code was wrong
+                btnConnectReceiver.innerHTML = originalText; 
+                btnConnectReceiver.removeAttribute('disabled');
+                showToast('Invalid or expired code. Please try again.');
             },
             (data, activeConn) => { 
                 
-                // FASTER: Intercept raw binary chunks immediately
+                // Intercept raw binary chunks immediately
                 if (data instanceof ArrayBuffer || ArrayBuffer.isView(data) || (data.byteLength !== undefined && !data.type)) {
                     
-                    receiveBuffer.push(data);
-                    receivedBytes += data.byteLength;
+                    // FIX: write directly into the preallocated buffer (no per-chunk allocation)
+                    if (receiveBuffer) {
+                        let chunk;
+                        if (data instanceof Uint8Array) {
+                            chunk = data; // already a view, no copy
+                        } else if (data instanceof ArrayBuffer) {
+                            chunk = new Uint8Array(data);
+                        } else {
+                            // ArrayBufferView (e.g. DataView) — wrap without copying
+                            chunk = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+                        }
+                        receiveBuffer.set(chunk, receivedBytes);
+                        receivedBytes += chunk.byteLength;
+                    }
                     
                     const now = Date.now();
                     // Throttle UI updates
@@ -190,7 +206,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     isTransferring = true;
                     expectedName = data.name; 
                     expectedSize = data.size;
-                    receiveBuffer = []; 
+
+                    // FIX: preallocate one buffer of exactly the incoming size
+                    try {
+                        receiveBuffer = new Uint8Array(expectedSize);
+                    } catch (allocErr) {
+                        console.error('Buffer allocation failed:', allocErr);
+                        showToast('File too large to receive.');
+                        goHome();
+                        return;
+                    }
                     receivedBytes = 0;
                     transferStartTime = Date.now();
                     lastUITime = transferStartTime;
@@ -208,11 +233,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         return;
                     }
                     
-                    // Let the browser natively handle array chunk stitching
-                    const blob = new Blob(receiveBuffer, { type: 'application/octet-stream' });
+                    // Let the browser natively wrap our single Uint8Array in a Blob (zero-copy in most engines)
+                    const blob = new Blob([receiveBuffer], { type: 'application/octet-stream' });
                     
+                    // FIX: revoke any previous URL before creating a new one
+                    if (pendingDownloadBlobUrl) URL.revokeObjectURL(pendingDownloadBlobUrl);
                     pendingDownloadBlobUrl = URL.createObjectURL(blob);
                     pendingDownloadFilename = expectedName;
+
+                    // FIX: free the big working buffer now that the Blob owns the data
+                    receiveBuffer = null;
                     
                     renderCompleteScreen('receiver', expectedName, expectedSize, true);
                     showScreen('screen-complete');

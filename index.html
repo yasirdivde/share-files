@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sharely</title>
+    <title>ShareFiles</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -56,7 +56,8 @@
     </script>
 
     <style>
-        body { background-color: #090a0f; margin: 0; padding: 0; overflow: hidden; font-family: 'Inter', sans-serif; }
+        /* FIX: added color:#ffffff so text stays visible even if Tailwind CDN fails to load */
+        body { background-color: #090a0f; color: #ffffff; margin: 0; padding: 0; overflow: hidden; font-family: 'Inter', sans-serif; }
         #app-container { width: 100vw; height: 100dvh; background-color: #090a0f; position: relative; overflow: hidden; display: flex; flex-direction: column; }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -68,6 +69,16 @@
     </style>
 </head>
 <body>
+
+    <!-- FIX: fallback UI shown only if a required CDN library fails to load -->
+    <div id="boot-error" style="display:none; position:fixed; inset:0; z-index:100; background:#090a0f; color:#fff; align-items:center; justify-content:center; padding:24px; text-align:center; font-family:'Inter',sans-serif;">
+        <div>
+            <div style="font-size:42px; color:#f59e0b; margin-bottom:16px;">&#9888;</div>
+            <h2 style="font-size:20px; font-weight:700; margin-bottom:8px;">Failed to load required resources</h2>
+            <p style="color:#9ca3af; font-size:14px; max-width:340px; margin:0 auto 16px;">This page needs an active internet connection the first time it loads. Please check your network and refresh.</p>
+            <button onclick="location.reload()" style="background:#0d2a85; color:#fff; border:none; padding:12px 24px; border-radius:16px; font-weight:600; cursor:pointer;">Retry</button>
+        </div>
+    </div>
 
     <div id="app-container" class="text-white relative">
         
@@ -88,7 +99,8 @@
                         <div class="w-[60px] h-[60px] md:w-[72px] md:h-[72px] rounded-full flex items-center justify-center bg-transparent mb-2 md:mb-3">
                             <img src="assets/sharely-icon.png" class="w-full h-full object-contain" onerror="this.style.display='none'">
                         </div>
-                        <h1 class="text-[28px] md:text-[36px] font-bold tracking-tight">Sharely</h1>
+                        <!-- FIX #1: renamed to ShareFiles with "Files" in accent blue -->
+                        <h1 class="text-[28px] md:text-[36px] font-bold tracking-tight">Share<span class="text-accent-blue">Files</span></h1>
                         <p class="text-gray-400 mt-1 text-[14px] md:text-[16px] font-medium tracking-wide">Fast. <span class="text-accent-blue">Secure.</span> Simple.</p>
                     </div>
                     <div class="flex justify-center w-full max-h-[130px] md:max-h-[180px] mb-8 md:mb-0">
@@ -397,15 +409,31 @@
     </div>
 
     <script type="module" src="js/app.js"></script>
-<script src="js/wake-lock.js" defer></script>
+    <script src="js/wake-lock.js" defer></script>
     <script>
         if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js")
-      .then(() => console.log("Service Worker registered"))
-      .catch(console.error);
-  });
-}
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("./sw.js")
+                    .then(() => console.log("Service Worker registered"))
+                    .catch(console.error);
+            });
+        }
+
+        // FIX: if any required library fails to load, show the fallback overlay
+        window.addEventListener('load', () => {
+            const missing = [];
+            if (typeof window.tailwind === 'undefined') missing.push('Tailwind');
+            if (typeof window.Peer === 'undefined') missing.push('PeerJS');
+            if (typeof window.JSZip === 'undefined') missing.push('JSZip');
+            if (typeof window.QRCode === 'undefined') missing.push('QRCode');
+            if (typeof window.Html5Qrcode === 'undefined') missing.push('html5-qrcode');
+
+            if (missing.length) {
+                console.error('Missing libraries:', missing);
+                const el = document.getElementById('boot-error');
+                if (el) { el.style.display = 'flex'; }
+            }
+        });
     </script>
 </body>
 </html>

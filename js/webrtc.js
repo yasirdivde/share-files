@@ -33,18 +33,49 @@ export function initSender(onConnectionEstablished, onReceiverData, onDisconnect
     return currentCode;
 }
 
+// FIX: 7s per-attempt timeout, 2 attempts max, clean failure feedback
 export function initReceiver(codeToConnect, onConnectionEstablished, onConnectionFailed, onSenderData, onDisconnect) {
-    let retries = 0;
-    const MAX_RETRIES = 3;
+    const CONNECT_TIMEOUT_MS = 7000;   // per-attempt timeout
+    const MAX_ATTEMPTS = 2;            // 2 attempts total
+    let attempt = 0;
+    let timeoutId = null;
+    let settled = false;
+
+    function cleanupAttempt() {
+        if (timeoutId) { clearTimeout(timeoutId); timeoutId = null; }
+        if (connection) {
+            try { connection.close(); } catch (e) {}
+            connection = null;
+        }
+        if (peer) {
+            try { peer.destroy(); } catch (e) {}
+            peer = null;
+        }
+    }
 
     function attemptConnection() {
+        attempt++;
+        settled = false;
+
         peer = new Peer(peerConfig);
 
-        peer.on('open', (id) => {
+        // Per-attempt timeout — if neither 'open' nor 'error' fires in time, treat as failure
+        timeoutId = setTimeout(() => {
+            if (settled) return;
+            settled = true;
+            handleFailure({ type: 'timeout' });
+        }, CONNECT_TIMEOUT_MS);
+
+        peer.on('open', () => {
+            if (settled) return;
+
             // Explicitly request a reliable channel for ordered chunk delivery
             connection = peer.connect(codeToConnect.toUpperCase(), { reliable: true });
 
             connection.on('open', () => {
+                if (settled) return;
+                settled = true;
+                if (timeoutId) { clearTimeout(timeoutId); timeoutId = null; }
                 onConnectionEstablished(connection);
             });
 
@@ -52,24 +83,25 @@ export function initReceiver(codeToConnect, onConnectionEstablished, onConnectio
             connection.on('close', onDisconnect);
 
             connection.on('error', (err) => {
+                if (settled) return;
+                settled = true;
                 handleFailure(err);
             });
         });
 
         peer.on('error', (err) => {
+            if (settled) return;
+            settled = true;
             handleFailure(err);
         });
     }
 
     function handleFailure(err) {
-        console.warn(`Connection attempt failed: ${err.type || err}`);
-        if (connection) connection.close();
-        if (peer) peer.destroy();
-        
-        retries++;
-        if (retries <= MAX_RETRIES) {
-            console.log(`Retrying connection... Attempt ${retries} of ${MAX_RETRIES}`);
-            setTimeout(() => attemptConnection(), 1500); 
+        console.warn(`Connection attempt ${attempt} failed:`, err);
+        cleanupAttempt();
+
+        if (attempt < MAX_ATTEMPTS) {
+            setTimeout(() => attemptConnection(), 500);
         } else {
             onConnectionFailed(err);
         }
@@ -80,12 +112,12 @@ export function initReceiver(codeToConnect, onConnectionEstablished, onConnectio
 
 // ----- HIGH-SPEED STREAMING TRANSFER LOGIC -----
 const CHUNK_SIZE = 64 * 1024; // 64KB safe maximum for WebRTC messages
-const MAX_BUFFER_SIZE = 2 * 1024 * 1024; // Increased to 4MB
+const MAX_BUFFER_SIZE = 2 * 1024 * 1024; // 2MB
 
 export async function startSendingFile(file, onProgressCallback, onCompleteCallback) {
     if (!connection || !connection.dataChannel) return;
     
-    // Alert us when the buffer drops below half capacity (2MB)
+    // Alert us when the buffer drops below half capacity (1MB)
     connection.dataChannel.bufferedAmountLowThreshold = MAX_BUFFER_SIZE / 2;
 
     connection.send({ type: 'META', name: file.name, size: file.size });
