@@ -1,7 +1,7 @@
 {
-  "name": "Sharely",
-  "short_name": "Sharely",
-  "description": "Sharely - Direct p2p file sharing.",
+  "name": "ShareFiles",
+  "short_name": "ShareFiles",
+  "description": "ShareFiles - Direct p2p file sharing.",
   "start_url": "./",
   "scope": "./",
   "display": "fullscreen",

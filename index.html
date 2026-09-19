@@ -4,78 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ShareFiles</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Self-hosted styles -->
+    <link rel="stylesheet" href="assets/vendor/tailwind.css">
+    <link rel="stylesheet" href="assets/vendor/fontawesome.min.css">
     <link rel="manifest" href="manifest.webmanifest">
 
-<meta name="theme-color" content="#151b54">
+    <meta name="theme-color" content="#151b54">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
 
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <!-- Self-hosted JS libraries (order matters: PeerJS relies on nothing, but QRCode must be loaded before ui.js uses it) -->
+    <script src="assets/vendor/jszip.min.js"></script>
+    <script src="assets/vendor/qrcode.min.js"></script>
+    <script src="assets/vendor/peerjs.min.js"></script>
+    <script src="assets/vendor/html5-qrcode.min.js"></script>
 
-<link rel="apple-touch-icon" href="assets/icon-192.png">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'app-bg': '#090a0f',
-                        'btn-blue': '#10255c',
-                        'accent-blue': '#3b82f6',
-                        'connect-bg': '#141b2d',
-                        'item-bg': '#11141d',
-                        'code-bg': '#091020',
-                        'card-bg': '#0d121f',
-                        'success-green': '#0e7a3d'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace']
-                    },
-                    keyframes: {
-                        zoomIn: {
-                            '0%': { transform: 'scale(0)' },
-                            '80%': { transform: 'scale(1.1)' },
-                            '100%': { transform: 'scale(1)' }
-                        }
-                    },
-                    animation: {
-                        zoomIn: 'zoomIn 0.5s ease-out forwards'
-                    }
-                }
-            }
-        }
-    </script>
-
+    <!-- Critical fallback styles — pure safety net in case tailwind.css hasn't painted yet.
+         The real styling lives in assets/vendor/tailwind.css (compiled from src/input.css). -->
     <style>
-        /* FIX: added color:#ffffff so text stays visible even if Tailwind CDN fails to load */
-        body { background-color: #090a0f; color: #ffffff; margin: 0; padding: 0; overflow: hidden; font-family: 'Inter', sans-serif; }
-        #app-container { width: 100vw; height: 100dvh; background-color: #090a0f; position: relative; overflow: hidden; display: flex; flex-direction: column; }
-        
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .qr-glow { box-shadow: 0 0 40px rgba(59, 130, 246, 0.25); }
-        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; }
-        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        body { background-color: #090a0f; color: #ffffff; margin: 0; font-family: 'Inter', sans-serif; }
     </style>
 </head>
 <body>
 
-    <!-- FIX: fallback UI shown only if a required CDN library fails to load -->
+    <!-- Fallback UI shown only if a required library fails to load -->
     <div id="boot-error" style="display:none; position:fixed; inset:0; z-index:100; background:#090a0f; color:#fff; align-items:center; justify-content:center; padding:24px; text-align:center; font-family:'Inter',sans-serif;">
         <div>
             <div style="font-size:42px; color:#f59e0b; margin-bottom:16px;">&#9888;</div>
             <h2 style="font-size:20px; font-weight:700; margin-bottom:8px;">Failed to load required resources</h2>
-            <p style="color:#9ca3af; font-size:14px; max-width:340px; margin:0 auto 16px;">This page needs an active internet connection the first time it loads. Please check your network and refresh.</p>
+            <p style="color:#9ca3af; font-size:14px; max-width:340px; margin:0 auto 16px;">Some app files failed to load. Please refresh the page. If the problem persists, try clearing your browser cache.</p>
             <button onclick="location.reload()" style="background:#0d2a85; color:#fff; border:none; padding:12px 24px; border-radius:16px; font-weight:600; cursor:pointer;">Retry</button>
         </div>
     </div>
@@ -99,7 +58,6 @@
                         <div class="w-[60px] h-[60px] md:w-[72px] md:h-[72px] rounded-full flex items-center justify-center bg-transparent mb-2 md:mb-3">
                             <img src="assets/sharely-icon.png" class="w-full h-full object-contain" onerror="this.style.display='none'">
                         </div>
-                        <!-- FIX #1: renamed to ShareFiles with "Files" in accent blue -->
                         <h1 class="text-[28px] md:text-[36px] font-bold tracking-tight">Share<span class="text-accent-blue">Files</span></h1>
                         <p class="text-gray-400 mt-1 text-[14px] md:text-[16px] font-medium tracking-wide">Fast. <span class="text-accent-blue">Secure.</span> Simple.</p>
                     </div>
@@ -148,7 +106,7 @@
                         <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-accent-blue flex flex-shrink-0 items-center justify-center font-bold text-white mt-0.5">1</div>
                         <div class="flex-1">
                             <h3 class="text-[15px] md:text-[16px] font-bold text-white mb-1">Open Browser on PC</h3>
-                            <p class="text-[13px] md:text-[14px] text-gray-400 leading-relaxed">Visit <span class="text-accent-blue font-medium break-all">https://yasirdivde.github.io/sharely/</span> on your computer's browser.</p>
+                            <p class="text-[13px] md:text-[14px] text-gray-400 leading-relaxed">Visit <span class="text-accent-blue font-medium break-all">https://yasirdivde.github.io/share-files/</span> on your computer's browser.</p>
                         </div>
                     </div>
 
@@ -419,10 +377,9 @@
             });
         }
 
-        // FIX: if any required library fails to load, show the fallback overlay
+        // Fallback: reveal boot-error overlay if any local library failed to load
         window.addEventListener('load', () => {
             const missing = [];
-            if (typeof window.tailwind === 'undefined') missing.push('Tailwind');
             if (typeof window.Peer === 'undefined') missing.push('PeerJS');
             if (typeof window.JSZip === 'undefined') missing.push('JSZip');
             if (typeof window.QRCode === 'undefined') missing.push('QRCode');
