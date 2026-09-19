@@ -1,4 +1,4 @@
-export const MAX_SIZE_BYTES = 200 * 1024 * 1024; // 200 MB
+export const MAX_SIZE_BYTES = 300 * 1024 * 1024; // 300 MB
 let selectedFiles = [];
 
 export function addFiles(newFiles) {
@@ -10,7 +10,7 @@ export function addFiles(newFiles) {
         const isDuplicate = selectedFiles.some(f => f.name === file.name && f.size === file.size);
         if (isDuplicate) continue;
         if (currentTotalSize + sizeToAdd + file.size > MAX_SIZE_BYTES) {
-            alert('Cannot add files. 200MB limit exceeded.');
+            alert('Cannot add files. 300MB limit exceeded.');
             break;
         }
         sizeToAdd += file.size;

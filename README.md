@@ -201,7 +201,7 @@ Wake Lock support varies — the feature silently no-ops on browsers that don't 
 
 ## ⚠️ Limitations
 
-- **200 MB max per transfer** — imposed by `MAX_SIZE_BYTES` in `fileManager.js` to keep memory usage sane.
+- **300 MB max per transfer** — imposed by `MAX_SIZE_BYTES` in `fileManager.js` to keep memory usage sane.
 - **STUN-only** — no TURN server is configured. This works for most home/office networks but **fails on symmetric NATs** or heavily restricted corporate networks where a relay would be required.
 - **Both peers must be online simultaneously** — it's a live P2P connection, not a mailbox.
 - **Same-network recommended** — for best speeds, both devices should be on the same Wi-Fi or LAN.
