@@ -4,8 +4,8 @@
   "description": "",
   "main": "sw.js",
   "scripts": {
-    "build:css": "tailwindcss -i ./src/input.css -o ./assets/vendor/tailwind.css --minify",
-    "watch:css": "tailwindcss -i ./src/input.css -o ./assets/vendor/tailwind.css --watch"
+    "build:css": "tailwindcss -i ./src/input.css -o ./docs/css/tailwind.css --minify",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./docs/css/tailwind.css --watch"
   },
   "repository": {
     "type": "git",

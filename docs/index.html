@@ -4,25 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ShareFiles</title>
-
+    <link rel="icon" type="image/png" href="images/icon-192.png">
     <!-- Self-hosted styles -->
-    <link rel="stylesheet" href="assets/vendor/tailwind.css">
-    <link rel="stylesheet" href="assets/vendor/fontawesome.min.css">
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="css/fontawesome.min.css">
     <link rel="manifest" href="manifest.webmanifest">
 
     <meta name="theme-color" content="#151b54">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    <link rel="apple-touch-icon" href="images/icon-192.png">
 
     <!-- Self-hosted JS libraries (order matters: PeerJS relies on nothing, but QRCode must be loaded before ui.js uses it) -->
-    <script src="assets/vendor/jszip.min.js"></script>
-    <script src="assets/vendor/qrcode.min.js"></script>
-    <script src="assets/vendor/peerjs.min.js"></script>
-    <script src="assets/vendor/html5-qrcode.min.js"></script>
+    <script src="vendor/jszip.min.js"></script>
+    <script src="vendor/qrcode.min.js"></script>
+    <script src="vendor/peerjs.min.js"></script>
+    <script src="vendor/html5-qrcode.min.js"></script>
 
     <!-- Critical fallback styles — pure safety net in case tailwind.css hasn't painted yet.
-         The real styling lives in assets/vendor/tailwind.css (compiled from src/input.css). -->
+         The real styling lives in css/tailwind.css (compiled from src/input.css). -->
     <style>
         body { background-color: #090a0f; color: #ffffff; margin: 0; font-family: 'Inter', sans-serif; }
     </style>
@@ -47,7 +48,7 @@
             <header class="flex justify-between items-center flex-none w-full max-w-5xl mx-auto">
                 <button class="text-2xl text-gray-200 hover:text-white transition-colors"><i class="fa-solid fa-bars"></i></button>
                 <div class="w-11 h-11 md:w-12 md:h-12 rounded-full overflow-hidden border border-transparent bg-gray-800">
-                    <img src="assets/avatar.png" class="w-full h-full object-cover" onerror="this.style.display='none'">
+                    <img src="images/avatar.png" class="w-full h-full object-cover" onerror="this.style.display='none'">
                 </div>
             </header>
             
@@ -56,13 +57,13 @@
                 <div class="flex flex-col items-center w-full md:w-1/2 md:pr-12">
                     <div class="flex flex-col items-center mb-6 md:mb-8">
                         <div class="w-[60px] h-[60px] md:w-[72px] md:h-[72px] rounded-full flex items-center justify-center bg-transparent mb-2 md:mb-3">
-                            <img src="assets/sharely-icon.png" class="w-full h-full object-contain" onerror="this.style.display='none'">
+                            <img src="images/sharely-icon.png" class="w-full h-full object-contain" onerror="this.style.display='none'">
                         </div>
                         <h1 class="text-[28px] md:text-[36px] font-bold tracking-tight">Share<span class="text-accent-blue">Files</span></h1>
                         <p class="text-gray-400 mt-1 text-[14px] md:text-[16px] font-medium tracking-wide">Fast. <span class="text-accent-blue">Secure.</span> Simple.</p>
                     </div>
                     <div class="flex justify-center w-full max-h-[130px] md:max-h-[180px] mb-8 md:mb-0">
-                        <img src="assets/folder_illus.png" class="w-auto h-full max-h-[130px] md:max-h-[180px] object-contain" onerror="this.style.display='none'">
+                        <img src="images/folder_illus.png" class="w-auto h-full max-h-[130px] md:max-h-[180px] object-contain" onerror="this.style.display='none'">
                     </div>
                 </div>
 
@@ -90,7 +91,7 @@
             <header class="flex justify-between items-center flex-none mb-6 w-full max-w-5xl mx-auto">
                 <button id="btn-back-home-from-help" class="text-2xl text-gray-200 hover:text-white transition-colors cursor-pointer p-2 -ml-2"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-[18px] md:text-[20px] font-semibold tracking-wide">Connect to PC</h2>
-                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden bg-gray-800"><img src="assets/avatar.png" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden bg-gray-800"><img src="images/avatar.png" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
             </header>
             
             <main class="flex-1 flex flex-col md:flex-row w-full overflow-y-auto no-scrollbar max-w-5xl mx-auto pb-10 md:py-10">
@@ -138,7 +139,7 @@
              <header class="flex justify-between items-center flex-none mb-6 w-full max-w-5xl mx-auto">
                 <button id="btn-back-home-from-send" class="text-2xl text-gray-200 hover:text-white transition-colors cursor-pointer p-2 -ml-2"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-[18px] md:text-[20px] font-semibold tracking-wide">Send Files</h2>
-                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden bg-gray-800"><img src="assets/avatar.png" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden bg-gray-800"><img src="images/avatar.png" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
             </header>
             
             <div class="w-full max-w-5xl mx-auto flex-1 flex flex-col md:flex-row min-h-0 md:py-6">
@@ -175,7 +176,7 @@
             <header class="flex justify-between items-center flex-none mb-8 w-full max-w-5xl mx-auto">
                 <button id="btn-cancel-share" class="text-2xl text-gray-200 hover:text-white transition-colors cursor-pointer p-2 -ml-2"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-[18px] md:text-[20px] font-semibold tracking-wide">Waiting for Connection</h2>
-                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden bg-gray-800"><img src="assets/avatar.png" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden bg-gray-800"><img src="images/avatar.png" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
             </header>
             
             <main class="flex-1 flex flex-col md:flex-row items-center justify-center w-full mt-2 md:mt-0 max-w-5xl mx-auto">
@@ -227,7 +228,7 @@
             <header class="flex justify-between items-center flex-none mb-6 w-full max-w-5xl mx-auto">
                 <button id="btn-back-home-from-receive" class="text-2xl text-gray-200 hover:text-white transition-colors cursor-pointer p-2 -ml-2"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 class="text-[18px] md:text-[20px] font-semibold tracking-wide">Connect to Sender</h2>
-                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden bg-gray-800"><img src="assets/avatar.png" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden bg-gray-800"><img src="images/avatar.png" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
             </header>
             
             <main class="flex-1 flex flex-col md:flex-row items-center justify-center w-full max-w-5xl mx-auto overflow-y-auto no-scrollbar pb-6 md:pb-0">
@@ -279,7 +280,7 @@
             <header class="flex justify-between items-center flex-none mb-8 w-full max-w-5xl mx-auto">
                 <button id="btn-abort-transfer" class="text-2xl text-gray-200 hover:text-white transition-colors cursor-pointer p-2 -ml-2"><i class="fa-solid fa-arrow-left"></i></button>
                 <h2 id="transfer-title" class="text-[18px] md:text-[20px] font-semibold tracking-wide">Transfer in Progress</h2>
-                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden bg-gray-800"><img src="assets/avatar.png" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
+                <div class="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden bg-gray-800"><img src="images/avatar.png" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
             </header>
 
             <main class="flex-1 flex flex-col md:flex-row items-center justify-center w-full max-w-5xl mx-auto pb-10">
@@ -289,7 +290,7 @@
                         <div class="absolute inset-0 rounded-full border-[4px] md:border-[5px] border-gray-800"></div>
                         <div class="absolute inset-0 rounded-full border-[4px] md:border-[5px] border-transparent border-t-accent-blue animate-spin" style="animation-duration: 1.5s;"></div>
                         <div class="absolute inset-2 md:inset-3 rounded-full border border-gray-800/50"></div>
-                        <img src="assets/folder_illus.png" alt="Transferring" class="w-16 h-16 md:w-20 md:h-20 object-contain relative z-10 animate-pulse" onerror="this.style.display='none'">
+                        <img src="images/folder_illus.png" alt="Transferring" class="w-16 h-16 md:w-20 md:h-20 object-contain relative z-10 animate-pulse" onerror="this.style.display='none'">
                     </div>
 
                     <h1 id="transfer-subtitle" class="text-[22px] md:text-[28px] font-bold tracking-tight mb-2 md:mb-3 text-center">Sending files...</h1>
