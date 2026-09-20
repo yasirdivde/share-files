@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disclaimer — ShareFiles</title>
+    <link rel="icon" type="image/png" href="images/icon-192.png">
+    <link rel="stylesheet" href="css/fontawesome.min.css">
+    <meta name="theme-color" content="#151b54">
+    <style>
+        /* ===== Reset (kills any interference from the app's CSS) ===== */
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: #090a0f;
+            color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+            overflow-y: auto;
+            height: auto;
+            min-height: 100%;
+            -webkit-overflow-scrolling: touch;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+        * { box-sizing: border-box; }
+
+        /* ===== Header ===== */
+        .site-header {
+            position: sticky;
+            top: 0;
+            background: #090a0f;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            z-index: 10;
+        }
+        .site-header-inner {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s;
+            flex-shrink: 0;
+        }
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #ffffff;
+        }
+        .site-header h1 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            color: #ffffff;
+            letter-spacing: 0.01em;
+        }
+
+        /* ===== Page container ===== */
+        .page {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+        }
+
+        /* ===== Title block ===== */
+        .eyebrow {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            color: #3b82f6;
+            margin: 0 0 10px;
+            text-transform: uppercase;
+        }
+        .page-title {
+            font-size: 34px;
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin: 0 0 10px;
+            color: #ffffff;
+        }
+        .updated {
+            font-size: 14px;
+            color: #8b95a5;
+            margin: 0 0 40px;
+        }
+
+        /* ===== Intro ===== */
+        .intro {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #d7dce4;
+            margin: 0 0 44px;
+        }
+
+        /* ===== Sections ===== */
+        .section {
+            margin: 0 0 40px;
+        }
+        .section:last-of-type {
+            margin-bottom: 0;
+        }
+        .section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin: 0 0 14px;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+        }
+        .section p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #d7dce4;
+            margin: 0 0 16px;
+        }
+        .section p:last-child {
+            margin-bottom: 0;
+        }
+        .section strong {
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .section a.inline-link {
+            color: #3b82f6;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+            transition: border-color 0.15s;
+        }
+        .section a.inline-link:hover {
+            border-bottom-color: #3b82f6;
+        }
+
+        /* ===== Contact card ===== */
+        .contact-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #11141d;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 16px;
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.15s, border-color 0.15s;
+            margin-top: 20px;
+        }
+        .contact-card:hover {
+            background: #1a233a;
+            border-color: rgba(59, 130, 246, 0.45);
+        }
+        .contact-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #10255c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .contact-icon i {
+            color: #3b82f6;
+            font-size: 18px;
+        }
+        .contact-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .contact-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: #8b95a5;
+            margin: 0 0 3px;
+        }
+        .contact-email {
+            font-size: 15px;
+            font-weight: 500;
+            color: #ffffff;
+            margin: 0;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            margin-top: 56px;
+            padding-top: 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        .footer p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #8b95a5;
+            margin: 0;
+            text-align: center;
+        }
+
+        /* ===== Mobile tweaks ===== */
+        @media (max-width: 640px) {
+            .page {
+                padding: 28px 18px 60px;
+            }
+            .page-title {
+                font-size: 28px;
+            }
+            .section h2 {
+                font-size: 18px;
+            }
+            .intro,
+            .section p {
+                font-size: 15px;
+            }
+            .updated {
+                margin-bottom: 32px;
+            }
+            .intro {
+                margin-bottom: 36px;
+            }
+            .section {
+                margin-bottom: 34px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a href="index.html" aria-label="Back to app" class="back-btn">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <h1>Disclaimer</h1>
+        </div>
+    </header>
+
+    <!-- Page -->
+    <main class="page">
+
+        <!-- Title -->
+        <p class="eyebrow">Legal</p>
+        <h2 class="page-title">Disclaimer</h2>
+        <p class="updated">Last updated: this page reflects the current state of the project.</p>
+
+        <!-- Intro -->
+        <p class="intro">
+            ShareFiles is a browser-based peer-to-peer file transfer tool. This page explains what the project is, what it isn't, and how it handles your data.
+        </p>
+
+        <!-- Sections -->
+        <div class="section">
+            <h2>A hobby project</h2>
+            <p>ShareFiles is a personal hobby project built by an individual developer, primarily as a way to learn and practice JavaScript, browser APIs, WebRTC, and modern web tooling. It is not a company, not a startup, and not a commercial product. There is no team, no business entity, and no revenue behind it.</p>
+        </div>
+
+        <div class="section">
+            <h2>Non-commercial and ad-free</h2>
+            <p>The tool is provided entirely free of charge, with no advertising, no sponsored content, no affiliate links, no upsells, and no monetization of any kind. It does not collect payments, does not require sign-up, and does not run on any paid infrastructure beyond free static hosting.</p>
+            <p>There is no interest in user data, no analytics tracking, and no attempt to build an audience or a business. The intent is simply to be useful to anyone who needs to move a file between two devices without uploading it to a third-party cloud service.</p>
+        </div>
+
+        <div class="section">
+            <h2>Names, logos, and design</h2>
+            <p>The name "ShareFiles", the icon marks, the color palette, and the visual design of this site were created independently, from scratch. Any resemblance to any other software, website, service, logo, or trademark — whether in name, styling, layout, color, or iconography — is purely coincidental and unintentional.</p>
+            <p>This project is not affiliated with, endorsed by, sponsored by, or connected to any other company, product, or service. No claim is made to any third-party trademark or brand. If any rights holder believes something here overlaps with their work, please reach out using the contact below and it will be addressed promptly.</p>
+        </div>
+
+        <div class="section">
+            <h2>Provided "as is"</h2>
+            <p>The tool is provided as-is, without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, accuracy, or non-infringement. No guarantee is made that the tool will be available, uninterrupted, error-free, or suitable for any specific use case.</p>
+            <p>The developer is not liable for any direct, indirect, incidental, consequential, or special damages arising from the use of, or inability to use, this tool — including but not limited to failed transfers, corrupted or incomplete files, unintended disclosure of personal, financial, or confidential information, loss of data, or any other loss.</p>
+        </div>
+
+        <div class="section">
+            <h2>Your responsibility</h2>
+            <p>You are solely responsible for the files you choose to send or receive through this tool, and for verifying that the receiving party is the intended recipient before you initiate a transfer. You are also responsible for ensuring that your use of the tool complies with all applicable laws in your jurisdiction, and that you have the right to share any file you transfer.</p>
+            <p>ShareFiles is not intended for distributing illegal, copyrighted, or harmful content. Doing so is strictly prohibited and is entirely the responsibility of the user.</p>
+        </div>
+
+        <div class="section">
+            <h2>Privacy</h2>
+            <p>Files transferred through ShareFiles are sent directly from one device to another over an WebRTC data channel. <strong>No file, chunk, or file metadata ever passes through, or is stored on, any server operated by the developer.</strong> There is no backend, no database, and no logging of user activity. When you close the tab, nothing remains anywhere but on your own device and that of the recipient.</p>
+            <p>To establish the initial connection between two devices, the app uses <a href="https://peerjs.com/" target="_blank" rel="noopener" class="inline-link">PeerJS</a>'s public signaling service and public STUN servers (provided by Google) as part of the standard WebRTC handshake. Only ephemeral connection metadata (session IDs and network routing information) is exchanged through these services — <strong>never file contents</strong>. Those requests are subject to the respective providers' own privacy policies.</p>
+            <p>The site loads no third-party CDNs at runtime. All libraries, fonts, and styles are self-hosted.</p>
+        </div>
+
+        <div class="section">
+            <h2>A note on reliability</h2>
+            <p>Because ShareFiles relies on a direct peer-to-peer connection, transfers can be affected by network conditions on either device. Very restrictive networks (such as some corporate or campus firewalls) may block the connection entirely. Transfers are also capped at a per-session size limit for memory safety. The developer is not responsible for interrupted, failed, or incomplete transfers caused by network conditions, device limitations, or browser behavior.</p>
+        </div>
+
+        <div class="section">
+            <h2>Contact</h2>
+            <p>Questions, concerns, corrections, or takedown requests are all welcome.</p>
+
+            <a href="mailto:contact.ydivde@gmail.com" class="contact-card">
+                <div class="contact-icon">
+                    <i class="fa-regular fa-envelope"></i>
+                </div>
+                <div class="contact-info">
+                    <p class="contact-label">EMAIL</p>
+                    <p class="contact-email">contact.ydivde@gmail.com</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>By using ShareFiles, you acknowledge that you have read and understood this disclaimer and agree to its terms.</p>
+        </div>
+
+    </main>
+
+</body>
+</html>
